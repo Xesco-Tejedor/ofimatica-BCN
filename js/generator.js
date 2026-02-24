@@ -30,7 +30,9 @@ const generatorData = {
         'Llicència d\'activitat', 'Sol·licitud de subvenció', 'Reclamació administrativa'
     ],
 
-    estats: ['Resolt', 'En tràmit', 'Pendent']
+    tipusActivitats: [
+        'Cultural', 'Esportiva', 'Formativa', 'Social'
+    ]
 };
 
 // Random number generator
@@ -70,109 +72,116 @@ function generateCertificatEmpadronament() {
 
     return {
         id: `word-gen-${Date.now()}`,
-        title: 'Certificat d\'empadronament (Dinàmic)',
-        description: 'Validació de dades en un certificat oficial',
+        title: 'Certificat d\'empadronament (Generat)',
+        description: 'Redactar un certificat oficial d\'empadronament',
         difficulty: 'Fàcil',
-        category: 'word',
-        total_points: 40,
-        pass_score: 50,
         scenario: `
-            <p><strong>Situació:</strong> S'ha generat un certificat per a ${nom} (DNI: ${dni}).</p>
-            <p><strong>Dades del sistema:</strong></p>
+            <p><strong>Situació:</strong> ${nom.split(' ')[0]} ${nom.split(' ')[1]} ${nom.split(' ')[2]} (DNI: ${dni}) ha sol·licitat un certificat d'empadronament.</p>
+            <p><strong>Dades del ciutadà:</strong></p>
             <ul>
-                <li>Nom: ${nom}</li>
+                <li>Nom complet: ${nom}</li>
                 <li>DNI: ${dni}</li>
                 <li>Adreça: ${adreca}</li>
+                <li>Data d'empadronament: ${dataEmpadronament}</li>
                 <li>Districte: ${districte}</li>
             </ul>
         `,
-        questions: [
-            {
-                type: 'multiple_choice',
-                question: 'Segons la normativa de l\'Ajuntament de Barcelona, quin és el títol que ha de presidir aquest document?',
-                options: [
-                    'CERTIFICAT D\'EMPADRONAMENT',
-                    'VOLANT DE RESIDÈNCIA',
-                    'ACTA DE CONVIVÈNCIA',
-                    'SOL·LICITUD DE REGISTRE'
-                ],
-                correct: 0,
-                points: 10,
-                explanation: 'El document sol·licitat és un Certificat d\'Empadronament, que té caràcter oficial i fefaent.'
-            },
-            {
-                type: 'identify_error',
-                question: `Si al cos del certificat apareix "DNI: ${dni.slice(0, -1)}X", què hem de fer?`,
-                options: [
-                    'Res, el número és correcte',
-                    'Corregir la lletra segons la dada oficial',
-                    'Demanar un nou DNI al ciutadà',
-                    'Anul·lar l\'expedient'
-                ],
-                correct: 1,
-                points: 15,
-                explanation: 'Les dades del certificat han de coincidir exactament con la base de dades oficial (el Padró).'
-            },
-            {
-                type: 'multiple_choice',
-                question: 'Quina d\'aquestes fórmules de tancament és la correcta en català?',
-                options: [
-                    'Y para que conste...',
-                    'I perquè consti i als efectes oportuns...',
-                    'Donat per finalitzat el present...',
-                    'Barcelona, a data d\'avui'
-                ],
-                correct: 1,
-                points: 15,
-                explanation: '"I perquè consti i als efectes oportuns" és la clàusula estàndard de tancament administrativa.'
-            }
-        ]
+        tasks: [
+            'Crear l\'encapçalament oficial de l\'Ajuntament de Barcelona',
+            'Incloure el títol "CERTIFICAT D\'EMPADRONAMENT"',
+            'Redactar el cos del certificat amb les dades del ciutadà',
+            'Afegir la fórmula de tancament oficial',
+            'Incloure peu de firma amb data i càrrec'
+        ],
+        checklist: [
+            'L\'encapçalament inclou el logo/text de l\'Ajuntament de Barcelona',
+            'El títol està en majúscules i centrat',
+            'S\'han inclòs totes les dades del ciutadà correctament',
+            'La redacció és formal i utilitza el llenguatge administratiu adequat',
+            'Inclou la data d\'emissió del certificat',
+            'Hi ha espai per a la signatura i segell oficial'
+        ],
+        solution: `
+            <h4>Solució model:</h4>
+            <p>Segueix l'estructura estàndard dels certificats d'empadronament:</p>
+            <ul>
+                <li>Encapçalament oficial</li>
+                <li>Títol en majúscules</li>
+                <li>Fórmula "CERTIFICA:"</li>
+                <li>Dades del ciutadà en negreta</li>
+                <li>Fórmula de tancament</li>
+                <li>Signatura i segell</li>
+            </ul>
+        `,
+        type: 'word'
     };
 }
 
 function generateRegistreSolicituds() {
-    const estatObjetiu = randomElement(generatorData.estats);
+    const numSolicituds = 10;
+    const solicituds = [];
+
+    for (let i = 0; i < numSolicituds; i++) {
+        solicituds.push({
+            expedient: `2026/${randomElement(['CE', 'CC', 'LO', 'LA'])}/${String(randomInt(1, 999)).padStart(5, '0')}`,
+            nom: randomElement(generatorData.nombres),
+            dni: randomElement(generatorData.dnis),
+            tipus: randomElement(generatorData.tipusSolicituds),
+            data: randomDate(new Date(2026, 0, 1), new Date(2026, 1, 16)),
+            estat: randomElement(['Resolt', 'En tràmit', 'Pendent'])
+        });
+    }
 
     return {
         id: `excel-gen-${Date.now()}`,
-        title: 'Gestió de dades (Dinàmic)',
-        description: 'Anàlisi de dades municipals amb Excel',
+        title: 'Registre de sol·licituds ciutadanes (Generat)',
+        description: 'Organitzar i gestionar una base de dades de sol·licituds',
         difficulty: 'Mitjà',
-        category: 'excel',
-        total_points: 30,
-        pass_score: 50,
         scenario: `
-            <p><strong>Context:</strong> Estàs gestionant una taula amb 100 sol·licituds ciutadanes.</p>
-            <p><strong>Objectiu:</strong> Filtrar i comptar les sol·licituds que estan en estat "${estatObjetiu}".</p>
+            <p><strong>Situació:</strong> Has rebut un llistat desordenat de ${numSolicituds} sol·licituds ciutadanes que cal organitzar i analitzar.</p>
+            <p><strong>Dades generades aleatòriament</strong></p>
         `,
-        questions: [
-            {
-                type: 'multiple_choice',
-                question: `Quina funció d'Excel utilitzaries per comptar quantes vegades apareix l'estat "${estatObjetiu}"?`,
-                options: [
-                    '=SUMA(A1:A100)',
-                    `=CONTA.SI(E1:E100; "${estatObjetiu}")`,
-                    '=BUSCARV()',
-                    '=FILTRAR()'
-                ],
-                correct: 1,
-                points: 15,
-                explanation: 'CONTA.SI permet comptar cel·les que coincideixen amb un criteri de text específic.'
-            },
-            {
-                type: 'multiple_choice',
-                question: 'Si vols destacar en vermell les sol·licituds "Pendents", quina eina utilitzaries?',
-                options: [
-                    'Format condicional',
-                    'Filtre avançat',
-                    'Taula dinàmica',
-                    'Validació de dades'
-                ],
-                correct: 0,
-                points: 15,
-                explanation: 'El format condicional canvia l\'estètica de la cel·la segons el seu contingut automàticament.'
-            }
-        ]
+        tasks: [
+            'Crear una taula amb capçaleres adequades',
+            `Introduir les dades de les ${numSolicituds} sol·licituds`,
+            'Ordenar per data (més recent primer)',
+            'Aplicar format condicional: Verd (Resolt), Groc (En tràmit), Vermell (Pendent)',
+            'Crear una taula resum amb el recompte per estat',
+            'Afegir un gràfic de sectors amb la distribució d\'estats'
+        ],
+        checklist: [
+            'La taula té capçaleres clares i descriptives',
+            'Les dades estan ordenades correctament',
+            'El format condicional funciona correctament',
+            'La taula resum mostra els recomptes correctes',
+            'El gràfic és clar i llegible',
+            'S\'han utilitzat fórmules (CONTA.SI o similar)'
+        ],
+        solution: `
+            <h4>Dades generades:</h4>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.875rem;">
+                <tr style="background: #334155;">
+                    <th style="padding: 0.5rem; border: 1px solid #475569;">Expedient</th>
+                    <th style="padding: 0.5rem; border: 1px solid #475569;">Nom</th>
+                    <th style="padding: 0.5rem; border: 1px solid #475569;">DNI</th>
+                    <th style="padding: 0.5rem; border: 1px solid #475569;">Tipus</th>
+                    <th style="padding: 0.5rem; border: 1px solid #475569;">Data</th>
+                    <th style="padding: 0.5rem; border: 1px solid #475569;">Estat</th>
+                </tr>
+                ${solicituds.map(s => `
+                    <tr>
+                        <td style="padding: 0.5rem; border: 1px solid #475569;">${s.expedient}</td>
+                        <td style="padding: 0.5rem; border: 1px solid #475569;">${s.nom}</td>
+                        <td style="padding: 0.5rem; border: 1px solid #475569;">${s.dni}</td>
+                        <td style="padding: 0.5rem; border: 1px solid #475569;">${s.tipus}</td>
+                        <td style="padding: 0.5rem; border: 1px solid #475569;">${s.data}</td>
+                        <td style="padding: 0.5rem; border: 1px solid #475569;">${s.estat}</td>
+                    </tr>
+                `).join('')}
+            </table>
+            <p style="margin-top: 1rem;"><em>Copia aquestes dades a Excel i segueix les instruccions de l'exercici.</em></p>
+        `,
+        type: 'excel'
     };
 }
 
@@ -187,28 +196,26 @@ function generateRandomExercise() {
     const newExercise = generator();
 
     // Add to appropriate category
-    if (!exercisesDB[newExercise.category]) {
-        exercisesDB[newExercise.category] = [];
+    if (!exercisesDB[newExercise.type]) {
+        exercisesDB[newExercise.type] = [];
     }
-    exercisesDB[newExercise.category].push(newExercise);
+    exercisesDB[newExercise.type].push(newExercise);
 
     // Update stats if function exists
     if (typeof updateStats === 'function') {
         updateStats();
     }
 
-    // Show the new exercise
-    const categoryIndex = exercisesDB[newExercise.category].length - 1;
+    // Show the new exercise if function exists
+    const categoryIndex = exercisesDB[newExercise.type].length - 1;
     if (typeof loadExercise === 'function') {
-        loadExercise(newExercise.category, categoryIndex);
+        loadExercise(newExercise.type, categoryIndex);
     }
 
     return newExercise;
 }
 
-// Override the generateNewExercise function in app.js
+// Export to window
 if (typeof window !== 'undefined') {
-    window.generateNewExercise = function () {
-        return generateRandomExercise();
-    };
+    window.generateRandomExercise = generateRandomExercise;
 }

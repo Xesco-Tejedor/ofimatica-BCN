@@ -51,8 +51,11 @@ function showView(viewName) {
     document.querySelectorAll('.view').forEach(view => {
         view.classList.remove('active');
     });
-    document.getElementById(`${viewName}-view`).classList.add('active');
-    currentView = viewName;
+    const nextView = document.getElementById(`${viewName}-view`);
+    if (nextView) {
+        nextView.classList.add('active');
+        currentView = viewName;
+    }
 }
 
 function showHome() {
@@ -558,9 +561,11 @@ function findExerciseById(id) {
     return null;
 }
 
-// ===== App Initialization =====
-document.addEventListener('DOMContentLoaded', () => {
-    loadProgress();
-    updateStats();
-    showHome();
-});
+// ===== Generator =====
+function generateNewExercise() {
+    if (typeof generateRandomExercise === 'function') {
+        generateRandomExercise();
+    } else {
+        alert('Generador d\'exercicis en desenvolupament.\n\nAviat podràs generar nous tests de coneixement!');
+    }
+}

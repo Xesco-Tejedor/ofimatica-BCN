@@ -54,10 +54,10 @@ O manualment:
 4. Selecciona "Chrome" o "Firefox"
 
 **iOS:**
-1. Obre l'app "Fitxers"
-2. Navega a la carpeta
-3. Toca `index.html`
-4. S'obrirà a Safari automàticament
+11. Obre l'app "Fitxers"
+12. Navega a la carpeta
+13. Toca `index.html`
+14. S'obrirà a Safari automàticament
 
 ---
 
