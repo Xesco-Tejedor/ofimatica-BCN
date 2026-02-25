@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // ===== Exercise Database with Real Knowledge Testing =====
 
 const exercisesDB = {
