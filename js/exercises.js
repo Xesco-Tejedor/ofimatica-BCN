@@ -1365,16 +1365,16 @@ const exercisesDB = {
                 },
                 {
                     type: 'identify_error',
-                    question: 'Identifica l\'ERROR en aquest càlcul d\'Excel per a l\'IVA:',
+                    question: 'Identifica l\'ERROR en aquesta fórmula per calcular l\'IVA:',
                     options: [
-                        '=C2*0.21 (on C2 és el pressupost)',
+                        '=(C2+D2)*21/100 (on C2 és pressupost i D2 és taxa)',
                         '=(C2+D2)*0.21 (on C2 és pressupost i D2 és taxa)',
                         '=C2*1.21 (on C2 és el pressupost)',
                         '=(C2+D2)*1.21-C2-D2 (on C2 és pressupost i D2 és taxa)'
                     ],
                     correct: 2,
                     points: 15,
-                    explanation: 'L\'opció 3 multiplica només el pressupost per 1,21, però l\'IVA s\'aplica sobre pressupost + taxa. Correcte: =(C2+D2)*0.21'
+                    explanation: 'La fórmula "=C2*1.21" és errònia per dues raons: 1) Només calcula sobre el pressupost (oblida la taxa D2) i 2) Calcula el TOTAL amb IVA, no només la quota de l\'IVA.'
                 },
                 {
                     type: 'multiple_choice',
