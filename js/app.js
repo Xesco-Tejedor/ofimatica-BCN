@@ -114,8 +114,10 @@ function loadExercise(category, index) {
     const exercise = exercisesDB[category][index];
     currentExercise = { ...exercise, category, index };
     currentQuestionIndex = 0;
-    userAnswers = new Array(exercise.questions.length).fill(null);
-    questionResults = new Array(exercise.questions.length).fill(null);
+
+    const questionsCount = exercise.questions ? exercise.questions.length : 0;
+    userAnswers = new Array(questionsCount).fill(null);
+    questionResults = new Array(questionsCount).fill(null);
 
     showView('exercise');
 
@@ -133,11 +135,21 @@ function loadExercise(category, index) {
     // Reset results
     document.getElementById('results-section').classList.add('hidden');
 
-    // Show first question
-    showQuestion(0);
+    // Show content
+    if (exercise.questions && exercise.questions.length > 0) {
+        document.querySelector('.progress-indicator').classList.remove('hidden');
+        document.querySelector('.question-navigation').classList.remove('hidden');
+        showQuestion(0);
+    } else {
+        document.querySelector('.progress-indicator').classList.add('hidden');
+        document.querySelector('.question-navigation').classList.add('hidden');
+        renderPracticalExercise(exercise);
+    }
 }
 
 function showQuestion(index) {
+    if (!currentExercise.questions || currentExercise.questions.length === 0) return;
+
     currentQuestionIndex = index;
     const question = currentExercise.questions[index];
     const totalQuestions = currentExercise.questions.length;
@@ -184,6 +196,15 @@ function renderQuestion(question, index) {
     switch (question.type) {
         case 'multiple_choice':
         case 'identify_error':
+            questionHTML += renderMultipleChoice(question, userAnswer, result);
+            break;
+        case 'short_answer':
+        case 'fill_blank':
+            questionHTML += renderShortAnswer(question, userAnswer, result);
+            break;
+        case 'order':
+            questionHTML += renderOrdering(question, userAnswer, result);
+            break;
         default:
             questionHTML += renderMultipleChoice(question, userAnswer, result);
             break;
@@ -203,6 +224,11 @@ function renderQuestion(question, index) {
 
     questionHTML += `</div>`;
     container.innerHTML = questionHTML;
+
+    // Post-render setup
+    if (question.type === 'order') {
+        setupDragAndDrop();
+    }
 }
 
 function renderMultipleChoice(question, userAnswer, result) {
@@ -275,6 +301,47 @@ function renderOrdering(question, userAnswer, result) {
     html += '</div>';
 
     return html;
+}
+
+function renderPracticalExercise(exercise) {
+    const container = document.getElementById('question-section');
+
+    let html = `
+        <div class="practical-exercise">
+            <div class="tasks-section">
+                <h3>📝 Tasques a realitzar</h3>
+                <ul class="tasks-list">
+                    ${exercise.tasks.map(task => `<li>${task}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <div class="checklist-section" style="margin-top: 2rem;">
+                <h3>✅ Llista de verificació</h3>
+                <div class="checklist">
+                    ${exercise.checklist.map(item => `
+                        <div class="checklist-item">
+                            <input type="checkbox">
+                            <span>${item}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <div class="solution-section" style="margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="toggleSolution()">Veure Solució Model</button>
+                <div id="practical-solution" class="solution-content hidden" style="margin-top: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: var(--border-radius);">
+                    ${exercise.solution}
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
+function toggleSolution() {
+    const solution = document.getElementById('practical-solution');
+    solution.classList.toggle('hidden');
 }
 
 function getQuestionTypeName(type) {
@@ -459,10 +526,29 @@ function showResults(earned, total, percentage) {
             <div class="errors-summary">
                 <h4>Detall d'errors (${errors.length})</h4>
                 <div class="errors-list">
-                    ${errors.map(err => {
+                     ${errors.map(err => {
             const question = currentExercise.questions[err.index];
-            const userAnswerText = question.options[userAnswers[err.index]] || 'Cap (No contestada)';
-            const correctOptionText = question.options[question.correct];
+            const userAnswer = userAnswers[err.index];
+            let userAnswerText = 'Cap (No contestada)';
+            let correctOptionText = '';
+
+            if (userAnswer !== null && userAnswer !== undefined) {
+                if (question.type === 'multiple_choice' || question.type === 'identify_error') {
+                    userAnswerText = question.options[userAnswer] || userAnswer;
+                } else if (question.type === 'order') {
+                    userAnswerText = 'Ordre incorrecte';
+                } else {
+                    userAnswerText = userAnswer;
+                }
+            }
+
+            if (question.type === 'multiple_choice' || question.type === 'identify_error') {
+                correctOptionText = question.options[question.correct];
+            } else if (question.type === 'order') {
+                correctOptionText = 'Veure solució del cas';
+            } else {
+                correctOptionText = question.correct_answer || (question.correct_answers ? question.correct_answers[0] : '');
+            }
 
             return `
                             <div class="error-item">
