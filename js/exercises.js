@@ -1651,6 +1651,124 @@ const exercisesDB = {
             ],
             total_points: 90,
             pass_score: 60
+        },
+        {
+            id: 'integrated-4',
+            title: 'Gestió de personal i contractació',
+            description: 'Cas complet: alta de treballador, càlcul de costos i notificació',
+            difficulty: 'Difícil',
+            category: 'integrated',
+            scenario: `
+                <p><strong>Situació:</strong> L'Institut Municipal de Mercats ha contractat un nou tècnic auxiliar per a la campanya d'estiu.</p>
+                <p><strong>Dades del treballador:</strong></p>
+                <ul>
+                    <li>Nom: Anna Rodriguez Sánchez</li>
+                    <li>DNI: 34567891C</li>
+                    <li>Categoria: Tècnic Auxiliar (Grup C2)</li>
+                    <li>Sou brut mensual base: 1.450 €</li>
+                    <li>Complement de destinació: 320 €</li>
+                    <li>Retenció IRPF: 12%</li>
+                    <li>Seguretat Social (quota treballador): 6,35%</li>
+                    <li>Data d'alta: 1 de juny de 2026</li>
+                </ul>
+            `,
+            questions: [
+                {
+                    type: 'multiple_choice',
+                    question: 'Quin és el sou brut TOTAL mensual (Base + Complement)?',
+                    options: [
+                        '1.450 €',
+                        '1.720 €',
+                        '1.770 €',
+                        '1.850 €'
+                    ],
+                    correct: 2,
+                    points: 10,
+                    explanation: '1.450 € (Base) + 320 € (Complement) = 1.770 €.'
+                },
+                {
+                    type: 'multiple_choice',
+                    question: 'Quin import es dedueix per IRPF (12% del brut total)?',
+                    options: [
+                        '174,00 €',
+                        '212,40 €',
+                        '185,20 €',
+                        '206,10 €'
+                    ],
+                    correct: 1,
+                    points: 10,
+                    explanation: '1.770 € × 0,12 = 212,40 €.'
+                },
+                {
+                    type: 'multiple_choice',
+                    question: 'Quin seria el sou NET a percebre (Brut Total - IRPF - Seguretat Social 6,35%)?',
+                    options: [
+                        '1.445,20 €',
+                        '1.480,35 €',
+                        '1.445,21 €',
+                        '1.512,10 €'
+                    ],
+                    correct: 2,
+                    points: 20,
+                    explanation: 'Brut (1.770) - IRPF (212,40) - SS (1.770 × 0,0635 = 112,395 ≈ 112,40). Total Net: 1.770 - 212,40 - 112,40 = 1.445,20 €. (Nota: Depenent del truncament pot variar 1 cèntim: 1.445,21 €)'
+                },
+                {
+                    type: 'identify_error',
+                    question: 'Identifica l\'ERROR en aquesta clàusula del contracte de treball:',
+                    options: [
+                        'La durada del contracte serà de 3 mesos...',
+                        'La jornada laboral serà de 37,5 hores setmanals...',
+                        'El període de prova serà de 6 mesos per a aquesta categoria...',
+                        'Les vacances seran de 22 dies hàbils per any complet...'
+                    ],
+                    correct: 2,
+                    points: 15,
+                    explanation: 'Per a un Tècnic Auxiliar (Grup C2), el període de prova màxim segons el TREBEP sol ser de 2 mesos, no 6. Els 6 mesos són per a titulats universitaris (Grup A).'
+                },
+                {
+                    type: 'multiple_choice',
+                    question: 'En Excel, quina funció usaries per calcular automàticament el sou net de 50 treballadors?',
+                    options: [
+                        'SUMA',
+                        'Una fórmula amb referències relatives aplicada a tota la columna',
+                        'BUSCARV',
+                        'Taula dinàmica'
+                    ],
+                    correct: 1,
+                    points: 10,
+                    explanation: 'Les referències relatives (ex: =B2-C2-D2) permeten copiar la fórmula cap avall i que s\'ajusti automàticament a cada fila.'
+                },
+                {
+                    type: 'order',
+                    question: 'Ordena els conceptes en una nòmina oficial de dalt a baix:',
+                    items: [
+                        'Deduccions (IRPF, SS)',
+                        'Dades de l\'empresa i treballador',
+                        'Líquid a percebre (Net)',
+                        'Devengos (Salari base, complements)',
+                        'Període de liquidació',
+                        'Signatura i segell'
+                    ],
+                    correct_order: [1, 4, 3, 0, 2, 5],
+                    points: 15,
+                    explanation: 'L\'ordre oficial és: 1) Dades, 2) Període, 3) Devengos (Ingressos), 4) Deduccions, 5) Net, 6) Signatura.'
+                },
+                {
+                    type: 'multiple_choice',
+                    question: 'Quina fórmula d\'Excel calcularia correctament el sou net de l\'Anna?',
+                    options: [
+                        '=1770 - (1770*0,12) - (1770*0,0635)',
+                        '=(1450+320) * 0,8165',
+                        '=1770 - 212,40 - 110',
+                        'Ambdós A i B són correctes'
+                    ],
+                    correct: 3,
+                    points: 20,
+                    explanation: 'Ambdues fórmules arriben al mateix resultat (1.445,20 €). La B és una forma simplificada: 1 - 0,12 - 0,0635 = 0,8165.'
+                }
+            ],
+            total_points: 100,
+            pass_score: 70
         }
     ]
 };

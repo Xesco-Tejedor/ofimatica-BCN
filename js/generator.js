@@ -6,18 +6,22 @@ const generatorData = {
         'Maria García Pérez', 'Joan Martínez López', 'Anna Rodríguez Sánchez',
         'Pere Soler Vidal', 'Laura Fernández Ruiz', 'David Sánchez Moreno',
         'Marta López Jiménez', 'Carles Vila Pujol', 'Núria Roca Mas',
-        'Albert Puig Ferrer', 'Cristina Sala Valls', 'Jordi Camps Serra'
+        'Albert Puig Ferrer', 'Cristina Sala Valls', 'Jordi Camps Serra',
+        'Sílvia Solé Martí', 'Marc Vives Guiu', 'Elena Costa Font',
+        'Pau Ribas Soler', 'Mireia Bosch Sans', 'Roger Farré Coll'
     ],
 
     dnis: [
         '12345678A', '23456789B', '34567890C', '45678901D', '56789012E',
-        '67890123F', '78901234G', '89012345H', '90123456J', '01234567K'
+        '67890123F', '78901234G', '89012345H', '90123456J', '01234567K',
+        '11223344L', '55667788M', '99001122N', '33445566P', '77889900Q'
     ],
 
     carrers: [
         'Carrer d\'Aragó', 'Passeig de Gràcia', 'Carrer de Balmes', 'Carrer de Provença',
         'Avinguda Diagonal', 'Carrer de València', 'Carrer de Mallorca', 'Carrer del Consell de Cent',
-        'Rambla de Catalunya', 'Carrer de Muntaner', 'Gran Via de les Corts Catalanes'
+        'Rambla de Catalunya', 'Carrer de Muntaner', 'Gran Via de les Corts Catalanes',
+        'Carrer de Sepúlveda', 'Carrer de Floridablanca', 'Carrer de Tamarit'
     ],
 
     districtes: [
@@ -27,11 +31,17 @@ const generatorData = {
 
     tipusSolicituds: [
         'Certificat d\'empadronament', 'Certificat de convivència', 'Llicència d\'obres menors',
-        'Llicència d\'activitat', 'Sol·licitud de subvenció', 'Reclamació administrativa'
+        'Llicència d\'activitat', 'Sol·licitud de subvenció', 'Reclamació administrativa',
+        'Instància genèrica', 'Queixa o suggeriment'
     ],
 
     tipusActivitats: [
-        'Cultural', 'Esportiva', 'Formativa', 'Social'
+        'Cultural', 'Esportiva', 'Formativa', 'Social', 'Juvenil', 'Gent Gran'
+    ],
+
+    carrecs: [
+        'Alcalde/essa', 'Secretari/ària', 'Regidor/a de l\'Àrea', 'Tècnic/a d\'Administració',
+        'Cap de Servei', 'Gerent de Districte'
     ]
 };
 
@@ -185,11 +195,67 @@ function generateRegistreSolicituds() {
     };
 }
 
+function generateActaReunio() {
+    const dataReunio = randomDate(new Date(2026, 0, 1), new Date(2026, 11, 31));
+    const horaInici = `${randomInt(9, 13)}:00h`;
+    const horaFi = `${randomInt(14, 18)}:00h`;
+    const president = randomElement(generatorData.nombres);
+    const secretari = randomElement(generatorData.nombres);
+    const lloc = `Sala de reunions del Districte de ${randomElement(generatorData.districtes)}`;
+
+    return {
+        id: `word-gen-acta-${Date.now()}`,
+        title: 'Acta de reunió (Generada)',
+        description: 'Redactar l\'acta d\'una sessió administrativa oficial',
+        difficulty: 'Mitjà',
+        scenario: `
+            <p><strong>Situació:</strong> Has d'elaborar l'acta de la sessió de la Comissió Tècnica celebrada el ${dataReunio}.</p>
+            <p><strong>Dades de la sessió:</strong></p>
+            <ul>
+                <li>Lloc: ${lloc}</li>
+                <li>Data: ${dataReunio}</li>
+                <li>Hora d'inici: ${horaInici}</li>
+                <li>Hora de finalització: ${horaFi}</li>
+                <li>President: ${president}</li>
+                <li>Secretari: ${secretari}</li>
+                <li>Ordre del dia: 3 punts (Aprovació acta anterior, Seguiment obres, Precs i preguntes)</li>
+            </ul>
+        `,
+        tasks: [
+            'Incloure l\'encapçalament complet amb l\'òrgan i tipus de sessió',
+            'Redactar la fórmula d\'obertura amb dades de lloc i hora',
+            'Llistar els assistents i absents',
+            'Redactar els acords presos en estil indirecte i en present',
+            'Incloure la fórmula de tancament i l\'hora de finalització',
+            'Afegir peu de firma per a President i Secretari'
+        ],
+        checklist: [
+            'L\'encapçalament és correcte i formal',
+            'S\'utilitza la tercera persona i estil indirecte',
+            'L\'ordre del dia apareix clarament llistat',
+            'Els temps verbals són en present d\'indicatiu',
+            'La fórmula de tancament inclou l\'hora de finalització',
+            'Les signatures estan correctament identificades'
+        ],
+        solution: `
+            <h4>Punts clau de l'Acta:</h4>
+            <ul>
+                <li><strong>Encapçalament:</strong> ACTA DE LA SESSIÓ...</li>
+                <li><strong>Obertura:</strong> "A la ciutat de Barcelona, a..."</li>
+                <li><strong>Estil:</strong> "S'aprova", "El president manifesta", "Es dóna compte"</li>
+                <li><strong>Tancament:</strong> "I no havent-hi més assumptes a tractar..."</li>
+            </ul>
+        `,
+        type: 'word'
+    };
+}
+
 // ===== Main Generator Function =====
 function generateRandomExercise() {
     const generators = [
         generateCertificatEmpadronament,
-        generateRegistreSolicituds
+        generateRegistreSolicituds,
+        generateActaReunio
     ];
 
     const generator = randomElement(generators);

@@ -389,6 +389,14 @@ body {
     align-items: center;
     gap: 2rem;
     box-shadow: var(--shadow-xl);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.generator-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+    filter: brightness(1.1);
 }
 
 .generator-icon {

@@ -384,9 +384,38 @@ function finishExercise() {
 function validateAnswer(question, userAnswer) {
     let correct = false;
 
+    if (userAnswer === null || userAnswer === undefined) {
+        return { correct: false, points: 0 };
+    }
+
     switch (question.type) {
         case 'multiple_choice':
         case 'identify_error':
+            correct = userAnswer === question.correct;
+            break;
+
+        case 'short_answer':
+            if (question.correct_answers) {
+                const normalizedAnswer = userAnswer.trim().toLowerCase();
+                correct = question.correct_answers.some(ans =>
+                    ans.toLowerCase() === normalizedAnswer
+                );
+            } else if (question.correct_answer) {
+                correct = userAnswer.trim().toLowerCase() === question.correct_answer.toLowerCase();
+            }
+            break;
+
+        case 'fill_blank':
+            correct = userAnswer.trim().toLowerCase() === question.correct_answer.toLowerCase();
+            break;
+
+        case 'order':
+            // userAnswer is an array of indices
+            if (Array.isArray(userAnswer)) {
+                correct = JSON.stringify(userAnswer) === JSON.stringify(question.correct_order);
+            }
+            break;
+
         default:
             correct = userAnswer === question.correct;
             break;
@@ -394,7 +423,7 @@ function validateAnswer(question, userAnswer) {
 
     return {
         correct,
-        points: question.points
+        points: correct ? (question.points || 10) : 0
     };
 }
 
